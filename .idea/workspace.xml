@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0836aa6c-50fd-4a5b-91c3-a0dda2fbe95a" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/getdata.py" />
-      <change beforePath="$PROJECT_DIR$/.idea/Pearc20VizPipeline.iml" afterPath="$PROJECT_DIR$/.idea/Pearc20VizPipeline.iml" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,7 +27,7 @@
         <entry file="file://$PROJECT_DIR$/getdata.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="420">
-              <caret line="20" column="4" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="4" />
+              <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
               <folding>
                 <element signature="e#63#75#0" expanded="true" />
               </folding>
@@ -131,6 +128,14 @@
       <option name="presentableId" value="Default" />
       <updated>1595893751624</updated>
     </task>
+    <task id="LOCAL-00001" summary="Created getdata.py">
+      <created>1595951767821</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1595951767821</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -158,6 +163,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Created getdata.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Created getdata.py" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -191,7 +200,7 @@
     <entry file="file://$PROJECT_DIR$/getdata.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
-          <caret line="20" column="4" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="4" />
+          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
           <folding>
             <element signature="e#63#75#0" expanded="true" />
           </folding>
