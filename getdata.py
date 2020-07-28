@@ -1,7 +1,11 @@
 ## Functions to get COVID/population/school data from the web
+import plotly.express as px
 
 import numpy as np
 import requests
+import plotly.express as px
+import pandas as pd
+import json
 
 def refreshdata():
     '''
@@ -35,14 +39,47 @@ def pullpublicschool():
         street_addr = attr["STREET"]
         city = attr["CITY"]
         county = attr["NMCNTY"]
+        fips = attr["CNTY"]
         state = attr["STATE"]
         zip_code = attr["ZIP"]
         lat = attr["LAT"]
         lon = attr["LON"]
-        select_school_data = [school_name, street_addr, city, county, state, zip_code, lat, lon]
+        select_school_data = {'name':school_name, 'addr':street_addr, 'city':city, \
+                    'country':county, 'state':state, 'zip':zip_code, 'lat':lat, 'lon':lon, 'fips':fips}
         schoolarr.append(select_school_data)
-        print(select_school_data) 
         #np.concatenate(schoolarr, school.values())  # adding the values of the school to the array
 
-    return schoolarr
-pullpublicschool()
+    return json.dumps(schoolarr)
+
+schoollist = pullpublicschool()
+myfile = open("schools.json", "w")
+myfile.write(schoollist)
+## THIS LINE DON"T WORKgit add -
+# df = pd.read_json("/Users/ChaseBusacker/Documents/Git/Pearc20VizPipeline/schools.json")
+# fips = df["fips"]
+
+# fig = e.create_choropleth(
+#     fips=fips, 
+#     plot_bgcolor='rgb(229,229,229)',
+#     paper_bgcolor='rgb(229,229,229)',
+#     legend_title='Population by County',
+#     county_outline={'color': 'rgb(255,255,255)', 'width': 0.5},
+#     exponent_format=True,
+# )
+# fig.show()
+
+# fips = []
+# values = []
+# for s in schoollist:
+#     pass
+
+# fig = e.create_choropleth(
+#     fips=fips, values=values, scope=['Florida'], show_state_data=True,
+#     colorscale=colorscale, binning_endpoints=endpts, round_legend_values=True,
+#     plot_bgcolor='rgb(229,229,229)',
+#     paper_bgcolor='rgb(229,229,229)',
+#     legend_title='Population by County',
+#     county_outline={'color': 'rgb(255,255,255)', 'width': 0.5},
+#     exponent_format=True,
+# )
+# fig.show()
