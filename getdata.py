@@ -30,6 +30,10 @@ def pullcovid():
     # Put csv files into numpy array
     covidcases = np.genfromtxt('./covid_us_county.csv', delimiter=',')
     popdata = np.genfromtxt('./us_county.csv', delimiter=',')
+    popdata = popdata[popdata[:,0].argsort()]
+
+    # delete nan
+    # TODO: add code to delete nan and get most recent covid cases
 
 
 
