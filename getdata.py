@@ -72,7 +72,6 @@ def pullpublicschool():
         schoolarr.append(select_school_data)
         #np.concatenate(schoolarr, school.values())  # adding the values of the school to the array
 
-<<<<<<< HEAD
     return json.dumps(schoolarr)
 
 schoollist = pullpublicschool()
