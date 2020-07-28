@@ -2,6 +2,9 @@
 
 import numpy as np
 import requests
+import os
+from zipfile import ZipFile
+
 
 def refreshdata():
     '''
@@ -15,6 +18,14 @@ def pullcovid():
     Get data with Kaggle API
     :return:
     '''
+
+    # Download COVID/population data from Kaggle
+    os.system("kaggle datasets download -d headsortails/covid19-us-county-jhu-data-demographics")
+
+    file_name = "covid19-us-county-jhu-data-demographics.zip"
+
+    with ZipFile(file_name, 'r') as zip:
+        zip.extractall()
 
 
 def pullpublicschool():
@@ -48,3 +59,4 @@ def pullpublicschool():
 
     return schoolarr
 pullpublicschool()
+pullcovid()
