@@ -12,8 +12,10 @@ def refreshdata():
 def pullcovid():
     '''
     Function to pull COVID/population data once. Needs to run every time data is updated.
+    Get data with Kaggle API
     :return:
     '''
+
 
 def pullpublicschool():
     '''
