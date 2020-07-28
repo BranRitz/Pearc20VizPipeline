@@ -7,6 +7,10 @@ import plotly.express as px
 import pandas as pd
 import json
 
+import os
+from zipfile import ZipFile
+
+
 def refreshdata():
     '''
     Function to update the data periodically.
@@ -16,8 +20,27 @@ def refreshdata():
 def pullcovid():
     '''
     Function to pull COVID/population data once. Needs to run every time data is updated.
+    Get data with Kaggle API. Put data into numpy array
     :return:
     '''
+
+    # Download COVID/population data from Kaggle
+    os.system("kaggle datasets download -d headsortails/covid19-us-county-jhu-data-demographics")
+
+    file_name = "covid19-us-county-jhu-data-demographics.zip"
+    # extract the zip file to get the COVID/population csv files
+    with ZipFile(file_name, 'r') as zip:
+        zip.extractall()
+
+    # Put csv files into numpy array
+    covidcases = np.genfromtxt('./covid_us_county.csv', delimiter=',')
+    popdata = np.genfromtxt('./us_county.csv', delimiter=',')
+    popdata = popdata[popdata[:,0].argsort()]
+
+    # delete nan
+    # TODO: add code to delete nan and get most recent covid cases
+
+
 
 def pullpublicschool():
     '''
@@ -49,6 +72,7 @@ def pullpublicschool():
         schoolarr.append(select_school_data)
         #np.concatenate(schoolarr, school.values())  # adding the values of the school to the array
 
+<<<<<<< HEAD
     return json.dumps(schoolarr)
 
 schoollist = pullpublicschool()
@@ -83,3 +107,6 @@ myfile.write(schoollist)
 #     exponent_format=True,
 # )
 # fig.show()
+
+pullcovid()
+
