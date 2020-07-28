@@ -15,7 +15,7 @@ def refreshdata():
 def pullcovid():
     '''
     Function to pull COVID/population data once. Needs to run every time data is updated.
-    Get data with Kaggle API
+    Get data with Kaggle API. Put data into numpy array
     :return:
     '''
 
@@ -23,9 +23,14 @@ def pullcovid():
     os.system("kaggle datasets download -d headsortails/covid19-us-county-jhu-data-demographics")
 
     file_name = "covid19-us-county-jhu-data-demographics.zip"
-
+    # extract the zip file to get the COVID/population csv files
     with ZipFile(file_name, 'r') as zip:
         zip.extractall()
+
+    # Put csv files into numpy array
+    covidcases = np.genfromtxt('./covid_us_county.csv', delimiter=',')
+    popdata = np.genfromtxt('./us_county.csv', delimiter=',')
+
 
 
 def pullpublicschool():
