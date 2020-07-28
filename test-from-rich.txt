@@ -1,1 +1,6 @@
 This is a test file.
+  #import packages
+
+import pandas as pd
+import numpy as np
+schoollocation_sl=pd.read_cav("https://coronavirus-resources.esri.com/datasets/0e8df2dcbbc54e13833344e2ca8c0fa4_0")
