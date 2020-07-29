@@ -39,7 +39,10 @@ def pullcovid():
 
     # delete nan
     # TODO: add code to delete nan and get most recent covid cases
-
+    n = popdata.shape(0)-1
+    while popdata[n][0].isNaN():    # delete all the FIPS-less data by iterating from the bottom to the top
+        popdata = np.delete(popdata, (n), axis=0)
+        n = n-1
 
 
 def pullpublicschool():
