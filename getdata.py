@@ -8,6 +8,7 @@ import plotly.figure_factory as ff
 import pandas as pd
 import json
 from io import open
+from os import path
 
 import os
 from zipfile import ZipFile
@@ -51,14 +52,6 @@ def pullpublicschool():
     Function to pull school location data. Only needs to run once
     :return:
     '''
-
-    # Need: county FIPS, latitude, longitude, school name, school id
-    schooldata = requests.get("https://services1.arcgis.com/Ua5sjt3LWTPigjyD/arcgis/rest/services/Public_School_Location_201819/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json")
-    schools = schooldata.json()     # school data is now a dictionary
-
-    schoollist = schools["features"]   # dictionary of all the schools
-   
-    # schoolarr = np.array(schoollist[0].keys())  # Header of array is names of the attributes
     schoolarr = []
     school_name_arr = []
     street_addr_arr = []
@@ -69,70 +62,66 @@ def pullpublicschool():
     lon_arr = []
     zip_arr = []
     fips_arr = []
-    for school in schoollist:
-        attr = school["attributes"]
-        school_name_arr.append(attr["NAME"])
-        street_addr_arr.append(attr["STREET"])
-        city_arr.append(attr["CITY"])
-        county_arr.append(attr["NMCNTY"])
-        fips_arr.append(attr["CNTY"])
-        state_arr.append(attr["STATE"])
-        zip_arr.append(attr["ZIP"])
-        lat_arr.append(attr["LAT"])
-        lon_arr.append(attr["LON"])
-        
-        #np.concatenate(schoolarr, school.values())  # adding the values of the school to the array
+    states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS',
+              'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC',
+              'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY']
+    # Need: county FIPS, latitude, longitude, school name, school id
+    # schooldata = requests.get("https://services1.arcgis.com/Ua5sjt3LWTPigjyD/arcgis/rest/services/Public_School_Location_201819/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json")
+    for state in states:
 
-    diction = {"name": school_name_arr, "street": street_addr_arr, "city": city_arr, 
-        "county_name": county_arr, "fips": fips_arr, "state":state_arr, "zip": zip_arr, "lat": lat_arr, "lon": lon_arr}
+        schooldata = requests.get(
+            "https://services1.arcgis.com/Ua5sjt3LWTPigjyD/arcgis/rest/services/Public_School_Location_201819/FeatureServer/0/query?where=STATE%20%3D%20'" + state + "'&outFields=NAME,STREET,CITY,STATE,ZIP,CNTY,NMCNTY,LAT,LON&outSR=4326&f=json")
+        schools = schooldata.json()  # school data is now a dictionary
+
+        schoollist = schools["features"]  # dictionary of all the schools
+
+        # schoolarr = np.array(schoollist[0].keys())  # Header of array is names of the attributes
+
+        for school in schoollist:
+            attr = school["attributes"]
+            school_name_arr.append(attr["NAME"])
+            street_addr_arr.append(attr["STREET"])
+            city_arr.append(attr["CITY"])
+            county_arr.append(attr["NMCNTY"])
+            fips_arr.append(attr["CNTY"])
+            state_arr.append(attr["STATE"])
+            zip_arr.append(attr["ZIP"])
+            lat_arr.append(attr["LAT"])
+            lon_arr.append(attr["LON"])
+
+        # np.concatenate(schoolarr, school.values())  # adding the values of the school to the array
+
+    diction = {"name": school_name_arr, "street": street_addr_arr, "city": city_arr,
+               "county_name": county_arr, "fips": fips_arr, "state": state_arr, "zip": zip_arr, "lat": lat_arr,
+               "lon": lon_arr}
     return json.dumps(diction)
 
-schoollist = pullpublicschool()
-myfile = open("schools.json", "w")
-myfile.write(schoollist)
 
-## THIS LINE DON"T WORK
-df = pd.read_json(open("schools.json", "r"),lines=True)
-fips = df[u'fips'][0]
-values = range(len(fips))
+def generateSchoolMap():
+    # load data first time only
+    if (not path.exists("schools.json")):
+        schoollist = pullpublicschool()
+        myfile = open("schools.json", "w")
+        myfile.write(schoollist)
 
-fig = ff.create_choropleth(fips=fips, values=values)
-fig.layout.template = None
-fig.show()
-# fig = go.Figure()
-# for i in range(len(df[u'fips'][0])):
-#     print (df[u'fips'][0][i])
-#      fig.add_trace(go.Scattergeo(
-#          locationmode = 'USA-states',
-#          lon = df[u"lon"][0][i],
-#         lat = df["data"]['lat'][i],
-#         text = df["data"]['name'][i],
-#         marker = dict(
-#             size = 1,
-#             color = "black",
-#             line_color='rgb(40,40,40)',
-#             line_width=0.5,
-#             sizemode = 'area'
-#         ),
-#         name = df["data"]["name"][i]))
+    df = pd.read_json(open("schools.json", "r"), lines=True)
 
-fig.show()
+    # make the map
+    fig = go.Figure(data=go.Scattergeo(
+        lon=df['lon'][0],
+        lat=df['lat'][0],
+        text=df['name'][0],
+        mode='markers',
+    ))
 
-# fips = []
-# values = []
-# for s in schoollist:
-#     pass
+    fig.update_layout(
+        title='Public schools across America',
+        geo_scope='usa',
+    )
 
-# fig = px.create_choropleth(
-#     fips=fips, values=values, scope=['Florida'], show_state_data=True,
-#     colorscale=colorscale, binning_endpoints=endpts, round_legend_values=True,
-#     plot_bgcolor='rgb(229,229,229)',
-#     paper_bgcolor='rgb(229,229,229)',
-#     legend_title='Population by County',
-#     county_outline={'color': 'rgb(255,255,255)', 'width': 0.5},
-#     exponent_format=True,
-# )
-# fig.show()
+    fig.show()
 
+
+generateSchoolMap()
 pullcovid()
 
