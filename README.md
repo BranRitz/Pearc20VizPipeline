@@ -3,6 +3,15 @@
 
 > This project was written for a Hackathon hosted by Science Gateways Community Institute to show parents the correlation between public schools and covid cases.
 
+# Team Members Names
+Nia Black <br>
+Christian Thomas <br> 
+Gabrielle Toutin <br>
+Chase Busacker <br>
+> Mentors:
+Brandi Kuritz <br>
+Rich Asay <br>
+> 
 
 We used APIs to get data from the schools and from the covid reporting. The following APIs were used:<br>
 kaggle <br>
@@ -25,5 +34,8 @@ A slider was also implemented to look back in time at cases for each county in t
     "pip install dash==1.14.0"<br>
     "pip install plotly==4.9.0"<br>
     "pip install kaggle"<br>
+4. Run "python3 ./getdata.py" in the cloned repo
+
+
 
 
