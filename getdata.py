@@ -89,7 +89,7 @@ def pullpublicschool():
 
 schoollist = pullpublicschool()
 myfile = open("schools.json", "w")
-myfile.write(schoollist.decode("utf-8"))
+myfile.write(schoollist)
 
 ## THIS LINE DON"T WORK
 df = pd.read_json(open("schools.json", "r"),lines=True)
