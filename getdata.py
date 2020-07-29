@@ -102,19 +102,20 @@ def generateSchoolMap():
     df = pd.read_json(open("schools.json", "r"),lines=True)
 
     #make the map
-    fig = go.Figure(data=go.Scattergeo(
-        lon = df['lon'][0],
-        lat = df['lat'][0],
-        text = df['name'][0],
-        mode = 'markers',
-        ))
-
-    fig.update_layout(
-        title = 'Public schools across America',
-        geo_scope='usa',
-    )
-
-    fig.show()
+    print(df)
+    # fig = go.Figure(data=go.Scattergeo(
+    #     lon = df['lon'][0],
+    #     lat = df['lat'][0],
+    #     text = df['name'][0],
+    #     mode = 'markers',
+    #     ))
+    #
+    # fig.update_layout(
+    #     title = 'Public schools across America',
+    #     geo_scope='usa',
+    # )
+    #
+    # fig.show()
 
 generateSchoolMap()
 pullcovid()
