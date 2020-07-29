@@ -35,17 +35,16 @@ def pullcovid():
         zip.extractall()
 
     # Put csv files into numpy array
-    covidcases = np.genfromtxt('./covid_us_county.csv', delimiter=',')
-    popdata = np.genfromtxt('./us_county.csv', delimiter=',')
-    popdata = popdata[popdata[:,0].argsort()]
+    covidcases = pd.read_csv('./covid_us_county.csv')
+    popdata = pd.read_csv('./us_county.csv')
 
-    # delete nan
-    # TODO: add code to delete nan and get most recent covid cases
-    n = popdata.shape(0)-1
-    while popdata[n][0].isNaN():    # delete all the FIPS-less data by iterating from the bottom to the top
-        popdata = np.delete(popdata, (n), axis=0)
-        n = n-1
+    covidcases = covidcases[["fips", "date", "cases", "deaths"]]    # only get relevant information in dataframe
+    popdata = popdata[["fips", "median_age", "population"]]
 
+    # Get only today's data for COVID
+    todaycases = covidcases[covidcases["date"] > "2020-07-26"]
+
+    return todaycases, popdata
 
 def pullpublicschool():
     '''
