@@ -56,7 +56,7 @@ def pullcovid():
         date = date - timeinc
 
 
-    return df_case_dict, popdata
+    return todaycases, df_case_dict, popdata
 
 def pullpublicschool():
     '''
