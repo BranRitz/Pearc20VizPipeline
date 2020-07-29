@@ -9,9 +9,10 @@ Christian Thomas <br>
 Gabrielle Toutin <br>
 Chase Busacker <br>
 > Mentors:
+
 Brandi Kuritz <br>
 Rich Asay <br>
-> 
+
 
 We used APIs to get data from the schools and from the covid reporting. The following APIs were used:<br>
 kaggle <br>
