@@ -123,10 +123,10 @@ def pullpublicschool(covid):
 
 def generateSchoolMap(covid):
     # load data first time only
-    if (not path.exists("schools.json")):
-        schoollist = pullpublicschool(covid)
-        myfile = open("schools.json", "w")
-        myfile.write(schoollist)
+  
+    schoollist = pullpublicschool(covid)
+    myfile = open("schools.json", "w")
+    myfile.write(schoollist.decode("utf-8"))
 
     df = pd.read_json(open("schools.json", "r", encoding="utf8"), lines=True)
 
