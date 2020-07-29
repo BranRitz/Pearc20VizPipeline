@@ -5,7 +5,7 @@
 
 
 We used APIs to get data from the schools and from the covid reporting. The following APIs were used:<br>
-kaggle
+kaggle <br>
 arcgis.com
 
 And the code uses plotly, dash, pandas to create a webpage that shows the following graphs:
@@ -18,13 +18,12 @@ A slider was also implemented to look back in time at cases for each county in t
 # How to see it work
 1. Either fork or clone this repo to your own machine
 2. Install Pip for python
-3. In a terminal/command line, run the following scripts:
-    "pip install pandas"
-    "pip install json"
-    "pip install datetime"
-    "pip install request"
-    "pip install dash==1.14.0"
-    "pip install plotly==4.9.0"
-    "pip install kaggle"
+3. In a terminal/command line, run the following scripts: <br>
+    "pip install json" <br>
+    "pip install datetime" <br>
+    "pip install request"<br>
+    "pip install dash==1.14.0"<br>
+    "pip install plotly==4.9.0"<br>
+    "pip install kaggle"<br>
 
 
