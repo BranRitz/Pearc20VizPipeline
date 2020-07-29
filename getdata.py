@@ -44,7 +44,7 @@ def pullcovid():
 
     # Get only today's data for COVID
     todaycases = covidcases[covidcases["date"] > "2020-07-26"]
-
+    
     return todaycases, popdata
 
 def pullpublicschool():
@@ -123,5 +123,27 @@ def generateSchoolMap():
 
 
 generateSchoolMap()
-pullcovid()
+
+covid_today, pop = pullcovid()
+
+response = requests.get('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json')
+counties = response.json()
+
+covid_today = covid_today.dropna()
+fips = covid_today["fips"]
+
+
+
+fig2 = px.choropleth(covid_today, geojson=counties, locations='fips', color='cases',
+                           range_color=(0, 5000),
+                           scope='usa',
+                           color_continuous_scale = "rainbow"
+                          )
+
+# fig2 = ff.create_choropleth(
+#     fips=fips, values=covid_today["cases"], scope=['CA', 'AZ', 'Nevada', 'Oregon', ' Idaho'],
+#     county_outline={'color': 'rgb(255,255,255)', 'width': 0.5}, round_legend_values=True,
+#     legend_title='Covid cases', title='Covid cases West Coast'
+# )
+fig2.show()
 
