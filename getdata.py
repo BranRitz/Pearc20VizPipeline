@@ -1,9 +1,11 @@
 ## Functions to get COVID/population/school data from the web
 import plotly.graph_objects as go
-
+import dash
 import numpy as np
 import requests
 import plotly.express as px
+import dash_core_components as dcc
+import dash_html_components as html
 import plotly.figure_factory as ff
 import pandas as pd
 import json
@@ -13,7 +15,7 @@ from datetime import datetime, timedelta
 
 import os
 from zipfile import ZipFile
-
+app = dash.Dash(__name__)
 
 def refreshdata():
     '''
@@ -83,7 +85,7 @@ def pullpublicschool():
               'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC',
               'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY']
     # Need: county FIPS, latitude, longitude, school name, school id
-    # schooldata = requests.get("https://services1.arcgis.com/Ua5sjt3LWTPigjyD/arcgis/rest/services/Public_School_Location_201819/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json")
+    schooldata = requests.get("https://services1.arcgis.com/Ua5sjt3LWTPigjyD/arcgis/rest/services/Public_School_Location_201819/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json")
     for state in states:
 
         schooldata = requests.get(
@@ -119,7 +121,7 @@ def generateSchoolMap():
     if (not path.exists("schools.json")):
         schoollist = pullpublicschool()
         myfile = open("schools.json", "w")
-        myfile.write(schoollist.decode("utf-8"))
+        myfile.write(schoollist)
 
     df = pd.read_json(open("schools.json", "r", encoding="utf8"), lines=True)
 
@@ -139,9 +141,11 @@ def generateSchoolMap():
 
     fig.write_html("temp1.html", auto_open=True)
 
+    return fig
 
 
-generateSchoolMap()
+pullpublicschool()
+fig = generateSchoolMap()
 pullcovid()
 
 covid_today, case_dict, pop = pullcovid()
@@ -166,3 +170,46 @@ fig2 = px.choropleth(covid_today, geojson=counties, locations='fips', color='cas
 # )
 fig2.write_html("temp2.html", auto_open=True)
 
+
+def layout_for_site(fig1, fig2):
+    app.title = "Covid Data"
+
+    app.layout = html.Div(children=[
+        html.Div([
+
+            html.H1("Public Schools K-12"),
+            dcc.Graph(
+                id="current-graph2",
+                figure=fig1),
+        ]),
+
+
+        html.Div([
+            html.Div([
+                html.Span('Select Date:'),
+            ], className='Grid-cell',
+            ),
+            dcc.Slider(),
+        ], className='Grid-cell',
+        ),
+        html.Div([
+            html.H1("Covid Cases per County"),
+            dcc.Graph(
+                id="current-graph",
+                figure=fig2),
+        ]),
+    ])
+
+
+layout_for_site(fig, fig2)
+# @app.callback(
+#     dash.dependencies.Output('current-graph', 'figure'),
+#     [dash.dependencies.Input('ngram-dropdown', 'value'),
+#     dash.dependencies.Input('date-slider', 'value')]
+# )
+# def update_output(ngram, date_index):
+#     pass
+
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
