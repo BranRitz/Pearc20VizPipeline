@@ -144,7 +144,7 @@ def generateSchoolMap(covid):
         geo_scope='usa',
     )
 
-    fig.write_html("temp1.html", auto_open=True)
+    #fig.write_html("temp1.html", auto_open=True)
 
     return fig
 
@@ -169,7 +169,7 @@ fig2 = px.choropleth(covid_today, geojson=counties, locations='fips', color='cas
 #     county_outline={'color': 'rgb(255,255,255)', 'width': 0.5}, round_legend_values=True,
 #     legend_title='Covid cases', title='Covid cases West Coast'
 # )
-fig2.write_html("temp2.html", auto_open=True)
+#fig2.write_html("temp2.html", auto_open=True)
 
 
 def layout_for_site(fig1, fig2):
@@ -185,21 +185,53 @@ def layout_for_site(fig1, fig2):
         ]),
 
 
-        html.Div([
             html.Div([
-                html.Span('Select Date:'),
+                html.Div([
+                    html.Span('Select Date:'),
+                ], className='Grid-cell',
+                ),
+                dcc.Slider(
+                    id='case_slider',
+                    min=1,
+                    max=30,
+                    step=1,
+                    value=30
+                ),
             ], className='Grid-cell',
             ),
-            dcc.Slider(),
-        ], className='Grid-cell',
-        ),
-        html.Div([
-            html.H1("Covid Cases per County"),
-            dcc.Graph(
-                id="current-graph",
-                figure=fig2),
-        ]),
+            html.Div([
+                html.H1("Covid Cases per County"),
+                dcc.Graph(
+                    id="current-graph",
+                    figure=fig2),
+            ]),
     ])
+
+
+    @app.callback(
+        dash.dependencies.Output('current-graph', 'figure'),
+        [dash.dependencies.Input('case_slider','value')])
+    def update_output(value):
+        # Update fig2
+        currtime = timedelta(days=30-value)
+        print(currtime)
+        today = datetime.date(datetime.today())-timedelta(days=1)
+        print(today)
+        #todaycases = case_dict["date" == str(today-currtime)]
+        print(case_dict)
+        var = None
+        for case,df in case_dict.items():
+            print(case)
+            if case == str(today-currtime):
+                var = df
+
+        fig2 = px.choropleth(var, geojson=counties, locations='fips', color='cases',
+                             range_color=(0, 5000),
+                             scope='usa',
+                             color_continuous_scale="rainbow"
+                             )
+        return fig2
+
 
 
 layout_for_site(fig, fig2)
