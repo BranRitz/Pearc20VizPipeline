@@ -8,7 +8,7 @@ kaggle
 arcgis.com
 
 And the code uses plotly, dash, pandas to create a webpage that shows the following graphs:
-<img src="https://github.com/BranRitz/Pearc20VizPipeline/schools.png" alt="Schools">
-<img src="https://github.com/BranRitz/Pearc20VizPipeline/covidcases.png" alt="Covid Cases by county">
+<img src="https://raw.githubusercontent.com/BranRitz/Pearc20VizPipeline/master/schools.png" alt="Schools">
+<img src="https://raw.githubusercontent.com/BranRitz/Pearc20VizPipeline/master/covidcases.png" alt="Covid Cases by county">
 
 
