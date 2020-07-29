@@ -28,7 +28,7 @@ def pullcovid():
     :return:
     '''
 
-    date = datetime.date(datetime.now())  # get today's date
+    date = datetime.date(datetime.now() - timedelta(days=4))  # get today's date
 
     # Download COVID/population data from Kaggle
     os.system("kaggle datasets download -d headsortails/covid19-us-county-jhu-data-demographics")
@@ -56,7 +56,11 @@ def pullcovid():
     for i in range(30): # go 30 days back
         df_case_dict[str(date)] = covidcases[covidcases["date"] == str(date)]
         date = date - timeinc
-
+    todaycases.dropna(inplace=True)
+    todaycases['fips'] = todaycases['fips'].astype('int64', copy=True)
+    todaycases = todaycases[todaycases['fips'] < 80000].copy(deep=True)
+    todaycases['fips'] = todaycases['fips'].astype('str', copy=True)
+    todaycases['fips'] = todaycases['fips'].str.rjust(5, '0')
 
     return todaycases, df_case_dict, popdata
 
@@ -115,7 +119,7 @@ def generateSchoolMap():
     if (not path.exists("schools.json")):
         schoollist = pullpublicschool()
         myfile = open("schools.json", "w")
-        myfile.write(schoollist)
+        myfile.write(schoollist.decode("utf-8"))
 
     df = pd.read_json(open("schools.json", "r", encoding="utf8"), lines=True)
 
@@ -143,8 +147,9 @@ covid_today, case_dict, pop = pullcovid()
 
 response = requests.get('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json')
 counties = response.json()
+with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+    print(covid_today)
 
-covid_today = covid_today.dropna()
 fips = covid_today["fips"]
 
 
