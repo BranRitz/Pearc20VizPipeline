@@ -13,6 +13,7 @@ Chase Busacker <br>
 Brandi Kuritz <br>
 Rich Asay <br>
 
+# Project Summary
 
 We used APIs to get data from the schools and from the covid reporting. The following APIs were used:<br>
 kaggle <br>
