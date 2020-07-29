@@ -28,6 +28,8 @@ def pullcovid():
     :return:
     '''
 
+    date = datetime.date(datetime.now())  # get today's date
+
     # Download COVID/population data from Kaggle
     os.system("kaggle datasets download -d headsortails/covid19-us-county-jhu-data-demographics")
 
@@ -44,10 +46,10 @@ def pullcovid():
     popdata = popdata[["fips", "median_age", "population"]]
 
     # Get only today's data for COVID
-    todaycases = covidcases[covidcases["date"] > "2020-07-26"]
+    todaycases = covidcases[covidcases["date"] == str(date)]
 
     # Get last 30 days of data
-    date = datetime.date(datetime.now())   # get today's date
+
     timeinc = timedelta(days=1)     # decrement one day at a time
     df_case_dict = {}    # dictionary will contain dates as keys, dataframes of cases for every county as values
 
@@ -115,7 +117,7 @@ def generateSchoolMap():
         myfile = open("schools.json", "w")
         myfile.write(schoollist)
 
-    df = pd.read_json(open("schools.json", "r"), lines=True)
+    df = pd.read_json(open("schools.json", "r", encoding="utf8"), lines=True)
 
     # make the map
     fig = go.Figure(data=go.Scattergeo(
@@ -130,14 +132,14 @@ def generateSchoolMap():
         geo_scope='usa',
     )
 
-    fig.show()
+    fig.write_html("temp1.html", auto_open=True)
 
 
 
 generateSchoolMap()
 pullcovid()
 
-covid_today, pop = pullcovid()
+covid_today, case_dict, pop = pullcovid()
 
 response = requests.get('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json')
 counties = response.json()
@@ -158,6 +160,5 @@ fig2 = px.choropleth(covid_today, geojson=counties, locations='fips', color='cas
 #     county_outline={'color': 'rgb(255,255,255)', 'width': 0.5}, round_legend_values=True,
 #     legend_title='Covid cases', title='Covid cases West Coast'
 # )
-fig2.show()
->>>>>>> ef88d58b22c2ec1aa30ef3f006aadd9671e0c68c
+fig2.write_html("temp2.html", auto_open=True)
 
