@@ -28,7 +28,7 @@ def pullcovid():
     :return:
     '''
 
-    date = datetime.date(datetime.now())  # get today's date
+    date = datetime.date(datetime.now() - timedelta(days=2))  # get today's date
 
     # Download COVID/population data from Kaggle
     os.system("kaggle datasets download -d headsortails/covid19-us-county-jhu-data-demographics")
@@ -64,7 +64,7 @@ def pullcovid():
 
     return todaycases, df_case_dict, popdata
 
-def pullpublicschool():
+def pullpublicschool(covid):
     '''
     Function to pull school location data. Only needs to run once
     :return:
@@ -96,7 +96,12 @@ def pullpublicschool():
 
         for school in schoollist:
             attr = school["attributes"]
-            school_name_arr.append(attr["NAME"])
+            fips = str(attr["CNTY"])
+            query = "fips =='"+attr["CNTY"]+"'"
+            name = str(attr["NAME"])
+           # print(str(covid.query(query)["cases"].values[0]))
+            text = name + "<br>Cases in county: " + str(covid.query(query)["cases"].values[0])
+            school_name_arr.append(text)
             street_addr_arr.append(attr["STREET"])
             city_arr.append(attr["CITY"])
             county_arr.append(attr["NMCNTY"])
@@ -114,10 +119,10 @@ def pullpublicschool():
     return json.dumps(diction)
 
 
-def generateSchoolMap():
+def generateSchoolMap(covid):
     # load data first time only
     if (not path.exists("schools.json")):
-        schoollist = pullpublicschool()
+        schoollist = pullpublicschool(covid)
         myfile = open("schools.json", "w")
         myfile.write(schoollist.decode("utf-8"))
 
@@ -139,11 +144,10 @@ def generateSchoolMap():
     fig.write_html("temp1.html", auto_open=True)
 
 
-
-generateSchoolMap()
-pullcovid()
-
 covid_today, case_dict, pop = pullcovid()
+generateSchoolMap(covid_today)
+
+
 
 response = requests.get('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json')
 counties = response.json()

@@ -28,7 +28,7 @@ def pullcovid():
     :return:
     '''
 
-    date = datetime.date(datetime.now() - timedelta(days=4))  # get today's date
+    date = datetime.date(datetime.now())  # get today's date
 
     # Download COVID/population data from Kaggle
     os.system("kaggle datasets download -d headsortails/covid19-us-county-jhu-data-demographics")
