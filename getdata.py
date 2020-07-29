@@ -149,7 +149,7 @@ def generateSchoolMap(covid):
     return fig
 
 covid_today, case_dict, pop = pullcovid()
-generateSchoolMap(covid_today)
+fig = generateSchoolMap(covid_today)
 
 response = requests.get('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json')
 counties = response.json()
