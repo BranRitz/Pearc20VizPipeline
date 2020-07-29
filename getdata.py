@@ -9,6 +9,7 @@ import pandas as pd
 import json
 from io import open
 from os import path
+from datetime import datetime, timedelta
 
 import os
 from zipfile import ZipFile
@@ -45,7 +46,17 @@ def pullcovid():
     # Get only today's data for COVID
     todaycases = covidcases[covidcases["date"] > "2020-07-26"]
 
-    return todaycases, popdata
+    # Get last 30 days of data
+    date = datetime.date(datetime.now())   # get today's date
+    timeinc = timedelta(days=1)     # decrement one day at a time
+    df_case_dict = {}    # dictionary will contain dates as keys, dataframes of cases for every county as values
+
+    for i in range(30): # go 30 days back
+        df_case_dict[str(date)] = covidcases[covidcases["date"] == str(date)]
+        date = date - timeinc
+
+
+    return df_case_dict, popdata
 
 def pullpublicschool():
     '''
@@ -122,6 +133,6 @@ def generateSchoolMap():
     fig.show()
 
 
-generateSchoolMap()
+#generateSchoolMap()
 pullcovid()
 
